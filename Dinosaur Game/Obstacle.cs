@@ -15,7 +15,7 @@ namespace Dinosaur_Game
     internal class Obstacle
     {
         private static Random random = new Random();
-        public static List<Obstacle> obstacles;
+        public static List<Obstacle> obstacles = new List<Obstacle>();
         public static void addObstacle()
         {
             obstacle type = random.Next(0,2)==0?obstacle.BIRD:obstacle.CACTUS;
@@ -26,13 +26,18 @@ namespace Dinosaur_Game
         {
             obstacles.Add(new Obstacle(type));
         }
+
+
+
         public static int coolDown;
-        public static void setCoolDown(int coolDown=20)
+        public static int coolTick;
+        public static void setCoolDown(int coolDown=50)
         {
             Obstacle.coolDown = coolDown;
+            Obstacle.coolTick = coolDown;
         }
         
-        private int position = Console.WindowWidth+6;
+        private int position = Console.WindowWidth;
         private obstacle type;
         private string[] shape;
         private string[] getCactus()
@@ -65,22 +70,66 @@ namespace Dinosaur_Game
         
         }
 
-        private string[] getBird()
-        {
-
-        }
+        //private string[] getBird()
+        //{
+        //    return 
+        //}
         public Obstacle(obstacle type)
         {
+            coolTick=coolDown;
             this.type = type;
 
             this.shape = getShape();
         }
+
+        //turn to out
         private string[] getShape()
         {
             if (this.type == obstacle.CACTUS)
                 return getCactus();
             else
-                return getBird();
+                return getCactus();
+        }
+        public static void clearStage(int y)
+        {
+            for (int i = 1; i < 5; i++)
+                Console.SetCursorPosition(0, y - i);
+            Console.Write(new string(' ',Console.WindowWidth));
+        }
+        public void draw(int y)
+        {
+            coolTick--;
+            this.position--;
+            
+            if (this.position < 0)
+            {
+                Obstacle.obstacles.Remove(this);
+            }
+            
+            for(int i = 0; i<this.shape.Length;i++)
+            {
+                Console.SetCursorPosition(this.position, y+1-(4-i));
+                if(position> Console.WindowWidth - 6) 
+                    Console.Write(this.shape[i].Substring(0,Console.WindowWidth-position));
+                else
+                    Console.Write(this.shape[i]);
+            }
+            
+
+        }
+        public static void drawObstacles(int y)
+        {
+            clearStage(y);
+            try
+            {
+                foreach (Obstacle _obstacle in obstacles)
+                {
+                    _obstacle.draw(y);
+                }
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }
