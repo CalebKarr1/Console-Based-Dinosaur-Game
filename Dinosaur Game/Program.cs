@@ -65,7 +65,7 @@ namespace Dinosaur_Game
                 {
                     ground += getGround();
                 }
-                if (Obstacle.coolTick < 0)
+                if (Obstacle.coolDown < 0)
                 {
                     Obstacle.addObstacle(obstacle.CACTUS);
                 }

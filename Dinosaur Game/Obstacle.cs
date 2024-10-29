@@ -24,17 +24,17 @@ namespace Dinosaur_Game
         }
         public static void addObstacle(obstacle type)
         {
+            coolDown = 50;
             obstacles.Add(new Obstacle(type));
         }
 
 
 
         public static int coolDown;
-        public static int coolTick;
         public static void setCoolDown(int coolDown=50)
         {
             Obstacle.coolDown = coolDown;
-            Obstacle.coolTick = coolDown;
+            
         }
         
         private int position = Console.WindowWidth;
@@ -76,7 +76,7 @@ namespace Dinosaur_Game
         //}
         public Obstacle(obstacle type)
         {
-            coolTick=coolDown;
+            
             this.type = type;
 
             this.shape = getShape();
@@ -98,7 +98,7 @@ namespace Dinosaur_Game
         }
         public void draw(int y)
         {
-            coolTick--;
+            
             this.position--;
             
             if (this.position < 0)
@@ -119,6 +119,7 @@ namespace Dinosaur_Game
         }
         public static void drawObstacles(int y)
         {
+            Obstacle.coolDown--;
             clearStage(y);
             try
             {
