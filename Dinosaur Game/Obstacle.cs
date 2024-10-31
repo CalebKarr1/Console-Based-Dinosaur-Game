@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
@@ -76,7 +77,7 @@ namespace Dinosaur_Game
         //}
         public Obstacle(obstacle type)
         {
-            
+            position = Console.WindowWidth;
             this.type = type;
 
             this.shape = getShape();
@@ -93,34 +94,56 @@ namespace Dinosaur_Game
         public static void clearStage(int y)
         {
             for (int i = 1; i < 5; i++)
+            {
                 Console.SetCursorPosition(0, y - i);
-            Console.Write(new string(' ',Console.WindowWidth));
+                Console.Write(new string(' ', 6));
+            }
         }
         public void draw(int y)
         {
             
             this.position--;
             
-            if (this.position < 0)
+            if (this.position < -6)
             {
-                Obstacle.obstacles.Remove(this);
+                //clearStage(y);
+                Obstacle.obstacles.RemoveAt(0);
+                return;
+                
             }
-            
-            for(int i = 0; i<this.shape.Length;i++)
+
+            for (int i = 0; i < this.shape.Length; i++)
             {
-                Console.SetCursorPosition(this.position, y+1-(4-i));
-                if(position> Console.WindowWidth - 6) 
-                    Console.Write(this.shape[i].Substring(0,Console.WindowWidth-position));
+
+                if(position>0)
+                    Console.SetCursorPosition(this.position, y + 1 - (4 - i));
+                else
+                    Console.SetCursorPosition(0, y + 1 - (4 - i));
+
+                if (position > Console.WindowWidth - 6) {
+                    Console.Write(this.shape[i].Substring(0, Console.WindowWidth - position));
+                }else if (position < 0)
+                {
+                    Console.Write(this.shape[i].Substring(Math.Abs(position)));
+                }
                 else
                     Console.Write(this.shape[i]);
+
             }
             
 
         }
+        public static void debug(string label, object str) {
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write("                                                       ");
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write(label+": "+ str+"   ");
+        }
+
         public static void drawObstacles(int y)
         {
             Obstacle.coolDown--;
-            clearStage(y);
+            
             try
             {
                 foreach (Obstacle _obstacle in obstacles)
