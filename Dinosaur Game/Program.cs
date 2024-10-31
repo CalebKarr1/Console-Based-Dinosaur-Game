@@ -40,6 +40,7 @@ namespace Dinosaur_Game
             string ground = getGround();
             int windowHeight = Console.WindowHeight;
             int windowWidth = Console.WindowHeight;
+            Dinosaur dinosaur = new Dinosaur(10);
             Console.CursorVisible = false;
             Obstacle.setCoolDown();
             Obstacle.addObstacle(obstacle.CACTUS);
@@ -71,6 +72,7 @@ namespace Dinosaur_Game
                 }
 
                 Obstacle.drawObstacles(windowHeight / 2 - 1);
+                dinosaur.draw(windowHeight / 2 - 1);
             });
             loop.Run();
             Thread inputThread = new Thread(() =>
