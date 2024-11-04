@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,18 +12,19 @@ namespace Dinosaur_Game
         private int xPos;
         private double yPos;
         private double yVel;
+        private int frame = 0;
         private string[] dinosaur = {
             "         ___ ",
-            "        /   \\",
-            "'___.--' /'  ",
+            "        / '< ",
+            "'___.--' /<  ",
             " '-._, )/    ",
             "    -'/      ",
             "      ^      "
             };
         private string[] dinosaur2 = {
             "         ___ ",
-            "        /   \\",
-            "'___.--' /'  ",
+            "        / '< ",
+            "'___.--' /<  ",
             " '-._, )/    ",
             "     /^.     ",
             "     '       "
@@ -72,8 +74,10 @@ namespace Dinosaur_Game
             for (int i = 0; i < dinosaur.Length; i++)
             {
                 Console.SetCursorPosition(this.xPos, y - 5+i-(int)this.yPos/3);
-                Console.WriteLine(dinosaur[i]);
+                Console.WriteLine(frame<5?dinosaur[i]: dinosaur2[i]);
             }
+            frame++;
+            frame = frame > 10 ? 0 : frame;
             debug("yVel", yVel);
         }
         public static void debug(string label, object str)
