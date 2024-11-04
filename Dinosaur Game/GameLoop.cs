@@ -14,11 +14,16 @@ namespace Dinosaur_Game
 
         public void Run()
         {
+            double speed = 50;
             Thread loop = new Thread(() =>
             {
                 while (true)
                 {
-                    Thread.Sleep(50);
+                    int score = 0;
+                    Program.calculateScore(out score);
+                    speed = (35.0 * Math.Pow(0.5, score / 100000))+5;
+                    Program.printInfo(3, "speed", speed);
+                    Thread.Sleep((int)speed);
                     LoopFunction();
                     
                 }

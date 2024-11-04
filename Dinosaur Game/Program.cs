@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
@@ -10,6 +12,7 @@ namespace Dinosaur_Game
 {
     internal class Program
     {   
+        
         static Random random = new Random();
         static int score = 0;
         static string[] groundBumps = { ",-=+-,", "_-+=──_", "──", "─+=__+─=-" };
@@ -34,7 +37,7 @@ namespace Dinosaur_Game
         }
         static void Main(string[] args)
         {
-            char i = 'a';
+            ConsoleKey i;
             
             
             string ground = getGround();
@@ -44,9 +47,10 @@ namespace Dinosaur_Game
             Console.CursorVisible = false;
             Obstacle.setCoolDown();
             Obstacle.addObstacle(obstacle.CACTUS);
+
             GameLoop loop = new GameLoop(() =>
             {
-                
+                score += 1;
                 if(Console.WindowHeight!= windowHeight)
                 {
                     Console.Clear();
@@ -73,18 +77,40 @@ namespace Dinosaur_Game
 
                 Obstacle.drawObstacles(windowHeight / 2 - 1);
                 dinosaur.draw(windowHeight / 2 - 1);
+                printInfo(2,"Score",score);
             });
             loop.Run();
             Thread inputThread = new Thread(() =>
             {
                 while (true)
                 {
-                    i = Console.ReadKey(true).KeyChar;
+                    i = Console.ReadKey(true).Key;
+                    switch (i)
+                    {
+                        case ConsoleKey.Spacebar:
+                            dinosaur.Jump();
+                            break;
+                    }
                 }
             }); 
             inputThread.Start();
             
         }
+        public static void printInfo(int yPos, params object[] args)
+        {
+            for(int i = 0; i<args.Length-1; i+=2)
+            {
+                Console.SetCursorPosition(0, yPos);
+                Console.Write("                                                       ");
+                Console.Write(args[i] + ": " + args[i+1] + "   ");
+            }
+            
+        }
+           
+        public static void calculateScore(out int score)
+        {
 
+            score = Program.score;
+        }
     }
 }

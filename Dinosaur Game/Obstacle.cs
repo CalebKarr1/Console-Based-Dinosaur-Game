@@ -133,12 +133,7 @@ namespace Dinosaur_Game
             
 
         }
-        public static void debug(string label, object str) {
-            Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.Write("                                                       ");
-            Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.Write(label+": "+ str+"   ");
-        }
+       
 
         public static void drawObstacles(int y)
         {
