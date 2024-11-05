@@ -57,13 +57,13 @@ namespace Dinosaur_Game
             
             if (yPos > 0)
             {
-                yVel-=0.1;
+                yVel-=0.2;
                 for (int i = 0; i < dinosaur.Length; i++)
                 {
                     
                     for(int e = 0; e < 13; e++)
                     {
-                        Console.SetCursorPosition(this.xPos+e, y - 5 + i - (int)this.yPos / 3);
+                        Console.SetCursorPosition(this.xPos+e, y - 5 + i - (int)this.yPos);
                         if((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e])!=' ')
                         {
                             Console.Write(" ");
@@ -85,14 +85,14 @@ namespace Dinosaur_Game
                 
                 for (int e = 0; e < 13; e++)
                 {
-                    Console.SetCursorPosition(this.xPos + e, y - 5 + i - (int)this.yPos / 3);
-                    if ((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]) == ' ')
+                    Console.SetCursorPosition(this.xPos + e, y - 5 + i - (int)this.yPos);
+                    if ((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]) != ' ')
                     {
-                        Console.Write(" ");
+                        Console.Write((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]));
                     }
                     else
                     {
-                        Console.Write((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]));
+                        
                     }
 
                 }

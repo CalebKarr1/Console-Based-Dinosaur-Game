@@ -21,7 +21,7 @@ namespace Dinosaur_Game
                 {
                     int score = 0;
                     Program.calculateScore(out score);
-                    speed = (35.0 * Math.Pow(0.5, score / 100000))+5;
+                    speed = (10.0 * Math.Pow(0.5, score / 100000))+5;
                     Program.printInfo(3, "speed", speed);
                     Thread.Sleep((int)speed);
                     LoopFunction();

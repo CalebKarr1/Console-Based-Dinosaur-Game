@@ -47,9 +47,10 @@ namespace Dinosaur_Game
             Console.CursorVisible = false;
             Obstacle.setCoolDown();
             Obstacle.addObstacle(obstacle.CACTUS);
-
+            int middle = windowHeight / 2 +5;
             GameLoop loop = new GameLoop(() =>
             {
+                middle = windowHeight / 2 +5;
                 score += 1;
                 if(Console.WindowHeight!= windowHeight)
                 {
@@ -62,7 +63,7 @@ namespace Dinosaur_Game
                     Console.Clear();
                     windowWidth = Console.WindowWidth;
                 }
-                Console.SetCursorPosition(0, windowHeight / 2-1);
+                Console.SetCursorPosition(0, middle);
                 Console.Write(ground.Substring(0, windowWidth));
 
                 ground = ground.Substring(1);
@@ -75,8 +76,8 @@ namespace Dinosaur_Game
                     Obstacle.addObstacle(obstacle.CACTUS);
                 }
 
-                Obstacle.drawObstacles(windowHeight / 2 - 1);
-                dinosaur.draw(windowHeight / 2 - 1);
+                Obstacle.drawObstacles(middle);
+                dinosaur.draw(middle);
                 printInfo(2,"Score",score);
             });
             loop.Run();
