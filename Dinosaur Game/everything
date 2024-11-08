@@ -1,0 +1,402 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;	
+class Dinosaur
+    {
+        private int xPos;
+        private double yPos;
+        private double yVel;
+        private int frame = 0;
+        private string[] dinosaur = {
+            "         ___ ",
+            "        / '< ",
+            "'___.--' /<  ",
+            " '-._, )/    ",
+            "    -'/      ",
+            "      ^      "
+            };
+        private string[] dinosaur2 = {
+            "         ___ ",
+            "        / '< ",
+            "'___.--' /<  ",
+            " '-._, )/    ",
+            "     /^.     ",
+            "     '       "
+            };
+
+
+
+        public Dinosaur(int xPos) { 
+            this.xPos = xPos;
+            this.yPos = 0;
+        }
+        public void Jump()
+        {
+            if (yPos == 0)
+            {
+                yVel = 2;
+            }
+            
+        }
+        public void draw(int y)
+        {
+
+            //for(int i = 0; i< Console.WindowHeight;i++)
+            //{
+            //    Console.SetCursorPosition(xPos, y);
+            //    Console.Write(new string(' ', 6));
+            //}
+
+            
+            
+            if (yPos > 0)
+            {
+                yVel-=0.2;
+                
+
+            }
+            for (int i = 0; i < dinosaur.Length; i++)
+            {
+
+                for (int e = 0; e < 13; e++)
+                {
+                    Console.SetCursorPosition(this.xPos + e, y - 5 + i - (int)this.yPos);
+                    if ((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]) != ' ')
+                    {
+                        Console.Write(" ");
+                    }
+
+                }
+
+            }
+            yPos += yVel;
+            if (yPos < 0)
+            {
+                yPos = 0;
+            }
+            frame++;
+            frame = frame > 10 ? 0 : frame;
+            debug("yVel", yVel);
+            for (int i = 0; i < dinosaur.Length; i++)
+            {
+                
+                for (int e = 0; e < 13; e++)
+                {
+                    Console.SetCursorPosition(this.xPos + e, y - 5 + i - (int)this.yPos);
+                    if ((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]) != ' ')
+                    {
+                        Console.Write((frame < 5 ? dinosaur[i][e] : dinosaur2[i][e]));
+                    }
+                    else
+                    {
+                        
+                    }
+
+                }
+                //Console.WriteLine(frame<5?dinosaur[i]: dinosaur2[i]);
+            }
+            
+        }
+        public static void debug(string label, object str)
+        {
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write("                                                       ");
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write(label + ": " + str + "   ");
+        }
+    }
+internal class GameLoop
+    {
+        private Action LoopFunction;
+        public GameLoop(Action run) {
+            LoopFunction = run;
+        }
+
+        public void Run()
+        {
+            double speed = 50;
+            Thread loop = new Thread(() =>
+            {
+                while (true)
+                {
+                    int score = 0;
+                    Program.calculateScore(out score);
+                    speed = (10.0 * Math.Pow(0.5, score / 100000))+5;
+                    Program.printInfo(3, "speed", speed);
+                    Thread.Sleep((int)speed);
+                    LoopFunction();
+                    
+                }
+            });
+            loop.Start();
+
+            
+        }
+       
+        
+       
+    }
+ enum obstacle
+    {
+        CACTUS,
+        BIRD
+    }
+class Obstacle
+    {
+        private static Random random = new Random();
+        public static List<Obstacle> obstacles = new List<Obstacle>();
+        public static void addObstacle()
+        {
+            obstacle type = random.Next(0,2)==0?obstacle.BIRD:obstacle.CACTUS;
+            obstacles.Add(new Obstacle(type));
+            
+        }
+        public static void addObstacle(obstacle type)
+        {
+            coolDown = 50;
+            obstacles.Add(new Obstacle(type));
+        }
+
+
+
+        public static int coolDown;
+        public static void setCoolDown(int coolDown=50)
+        {
+            Obstacle.coolDown = coolDown;
+            
+        }
+        
+        private int position = Console.WindowWidth;
+        private obstacle type;
+        private string[] shape;
+        private string[] getCactus()
+        {
+            
+            switch (random.Next(0, 3))
+            {
+                case 0:
+                    return new string[]
+                                {"_   ║ ",
+                                 "║ _ ║ ",
+                                 "╚═╬═╝ ",
+                                 "_╚║_║╝"};
+                case 1:
+                    return new string[]
+                                {"  _   ",
+                                 " ╚║   ",
+                                 "  ║╝_ ",
+                                 "__║_║╝"};
+                case 2:
+                    return new string[]
+                                {"      ",
+                                 "      ",
+                                 " ║  _ ",
+                                 "_║__║╝"};
+                default:
+                    return new string[] { "______" };
+
+            }
+        
+        }
+
+        //private string[] getBird()
+        //{
+        //    return 
+        //}
+        public Obstacle(obstacle type)
+        {
+            position = Console.WindowWidth;
+            this.type = type;
+
+            this.shape = getShape();
+        }
+
+        //turn to out
+        private string[] getShape()
+        {
+            if (this.type == obstacle.CACTUS)
+                return getCactus();
+            else
+                return getCactus();
+        }
+        public static void clearStage(int y)
+        {
+            for (int i = 1; i < 5; i++)
+            {
+                Console.SetCursorPosition(0, y - i);
+                Console.Write(new string(' ', 6));
+            }
+        }
+        public void draw(int y)
+        {
+            
+            this.position--;
+            
+            if (this.position < -6)
+            {
+                //clearStage(y);
+                Obstacle.obstacles.RemoveAt(0);
+                return;
+                
+            }
+
+            for (int i = 0; i < this.shape.Length; i++)
+            {
+
+                if(position>0)
+                    Console.SetCursorPosition(this.position, y + 1 - (4 - i));
+                else
+                    Console.SetCursorPosition(0, y + 1 - (4 - i));
+
+                if (position > Console.WindowWidth - 6) {
+                    Console.Write(this.shape[i].Substring(0, Console.WindowWidth - position));
+                }else if (position < 0)
+                {
+                    Console.Write(this.shape[i].Substring(Math.Abs(position)));
+                }
+                else
+                    Console.Write(this.shape[i]);
+
+            }
+            
+
+        }
+       
+
+        public static void drawObstacles(int y)
+        {
+            Obstacle.coolDown--;
+            
+            try
+            {
+                foreach (Obstacle _obstacle in obstacles)
+                {
+                    _obstacle.draw(y);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+    }
+class Program
+    {   
+        
+        static Random random = new Random();
+        static int score = 0;
+        static string[] groundBumps = { ",-=+-,", "_-+=──_", "──", "─+=__+─=-" };
+        
+        static string getGround(int width)
+        {
+            string ground = "";
+            Random random = new Random();
+            while (ground.Length < width)
+            {
+                if (random.Next(4) != 0)
+                {
+                    ground += new string('_', random.Next(10, 20));
+
+                }
+                else
+                {
+                    ground += groundBumps[random.Next(0, groundBumps.Length)];
+                }
+            }
+            return ground;
+        }
+        static void Main(string[] args)
+        {
+            ConsoleKey i;
+            
+            
+            
+            int windowHeight = Console.WindowHeight;
+            int windowWidth = Console.WindowHeight;
+			if(windowHeight==0||windowWidth==0){
+            	do{
+                Console.Clear();
+            	Console.Write("Could not find width\nmanually enter width: ");
+                }while(int.TryParse(Console.ReadLine(), out windowWidth)!=true);
+                do{
+                Console.Clear();
+            	Console.Write("Could not find height\nmanually enter height: ");
+                }while(int.TryParse(Console.ReadLine(), out windowWidth)!=true);
+                
+            }
+			string ground = getGround(windowWidth);
+            Dinosaur dinosaur = new Dinosaur(10);
+            Console.CursorVisible = false;
+            Obstacle.setCoolDown();
+            Obstacle.addObstacle(obstacle.CACTUS);
+            int middle = windowHeight / 2 +5;
+            Console.WriteLine(windowWidth);
+            
+            GameLoop loop = new GameLoop(() =>
+            {
+                middle = windowHeight / 2 +5;
+                score += 1;
+                if(Console.WindowHeight!= windowHeight&&Console.WindowHeight>0)
+                {
+                    Console.Clear();
+                    windowHeight = Console.WindowHeight;
+
+                }
+                if (Console.WindowWidth != windowWidth&&Console.WindowWidth>0)
+                {
+                    Console.Clear();
+                    windowWidth = Console.WindowWidth;
+                }
+                Console.SetCursorPosition(0, middle);
+                Console.Write(ground.Substring(0, windowWidth));
+
+                ground = ground.Substring(1);
+                if (ground.Length < windowWidth * 1.5)
+                {
+                    ground += getGround(windowWidth);
+                }
+                if (Obstacle.coolDown < 0)
+                {
+                    Obstacle.addObstacle(obstacle.CACTUS);
+                }
+
+                Obstacle.drawObstacles(middle);
+                dinosaur.draw(middle);
+                printInfo(2,"Score",score);
+            });
+            loop.Run();
+            Thread inputThread = new Thread(() =>
+            {
+                while (true)
+                {
+                    i = Console.ReadKey(true).Key;
+                    switch (i)
+                    {
+                        case ConsoleKey.Spacebar:
+                            dinosaur.Jump();
+                            break;
+                    }
+                }
+            }); 
+            inputThread.Start();
+            
+        }
+        public static void printInfo(int yPos, params object[] args)
+        {
+            for(int i = 0; i<args.Length-1; i+=2)
+            {
+                Console.SetCursorPosition(0, yPos);
+                Console.Write("                                                       ");
+                Console.Write(args[i] + ": " + args[i+1] + "   ");
+            }
+            
+        }
+           
+        public static void calculateScore(out int score)
+        {
+
+            score = Program.score;
+        }
+    }
+
